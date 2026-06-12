@@ -1,0 +1,1895 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vértes Bisztró — Étel · Ital · Bár</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Inter:wght@400;500;600;700&family=Caveat:wght@600&display=swap" rel="stylesheet">
+<style>
+/* =========================================================
+   VÉRTES BISZTRÓ — complete redesign
+   Palette: deep forest, warm cream, rust, aged gold
+   Type:    Fraunces (display) + Inter (body) + Caveat (accents)
+   ========================================================= */
+
+:root {
+  --cream:       #F2EBDD;
+  --cream-deep:  #E8DFCC;
+  --cream-paper: #FAF6EE;
+  --forest:      #2B3829;
+  --forest-mid:  #3D5239;
+  --forest-deep: #1A2418;
+  --rust:        #B5532D;
+  --rust-deep:   #9C4523;
+  --gold:        #C9A05B;
+  --gold-light:  #E2C27A;
+  --ink:         #2A2522;
+  --ink-soft:    rgba(42,37,34,0.65);
+  --line:        rgba(42,37,34,0.12);
+  --ease:        cubic-bezier(0.22, 1, 0.36, 1);
+  --shadow-card: 0 2px 0 rgba(255,255,255,0.45) inset, 0 20px 50px -24px rgba(0,0,0,0.3);
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+html.nav-open,
+html.action-window-open { overflow: hidden; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--cream);
+  color: var(--ink);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; }
+button, a { -webkit-tap-highlight-color: transparent; }
+button { font: inherit; }
+section, [id] { scroll-margin-top: 84px; }
+
+/* ========================= TOPBAR ========================= */
+.topbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 200;
+  background: rgba(242,235,221,0.0);
+  backdrop-filter: blur(0px);
+  border-bottom: 1px solid transparent;
+  transition: background 0.4s var(--ease), backdrop-filter 0.4s var(--ease),
+              border-color 0.4s var(--ease), box-shadow 0.4s var(--ease);
+}
+.topbar.scrolled {
+  background: rgba(242,235,221,0.92);
+  backdrop-filter: blur(14px) saturate(1.2);
+  border-bottom-color: var(--line);
+  box-shadow: 0 8px 32px -20px rgba(0,0,0,0.2);
+}
+.topbar-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 32px;
+}
+.brandmark {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Fraunces', serif;
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: var(--cream);
+  letter-spacing: 0.01em;
+  transition: color 0.3s var(--ease);
+}
+.topbar.scrolled .brandmark { color: var(--forest); }
+.brandmark:hover { opacity: 0.8; }
+
+.brandmark-logo {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  border-radius: 8px;
+  flex-shrink: 0;
+  transition: filter 0.3s var(--ease);
+}
+/* gépen scrollolva sötét háttéren a logo marad, világos háttéren kicsit rácsúszik */
+.topbar.scrolled .brandmark-logo {
+  /* logo eredeti színekkel mutat legjobban */
+}
+
+.nav-links {
+  display: flex;
+  gap: 32px;
+  list-style: none;
+}
+.nav-links a {
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: rgba(242,235,221,0.85);
+  letter-spacing: 0.04em;
+  transition: color 0.25s;
+}
+.topbar.scrolled .nav-links a { color: var(--forest); }
+.nav-links a:hover { color: var(--gold) !important; }
+.nav-links a:focus-visible,
+.brandmark:focus-visible,
+.lang-seal button:focus-visible,
+.btn:focus-visible,
+.mobile-menu-toggle:focus-visible,
+.mobile-action-toggle:focus-visible,
+.mobile-action:focus-visible,
+.mobile-action-close:focus-visible,
+.back-to-top:focus-visible {
+  outline: 3px solid var(--gold-light);
+  outline-offset: 4px;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.mobile-menu-toggle {
+  display: none;
+  width: 46px;
+  height: 46px;
+  border-radius: 999px;
+  border: 1.5px solid rgba(242,235,221,0.6);
+  background: rgba(242,235,221,0.08);
+  color: var(--cream);
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: color 0.3s var(--ease), border-color 0.3s var(--ease), background 0.3s var(--ease);
+}
+.topbar.scrolled .mobile-menu-toggle {
+  color: var(--forest);
+  border-color: rgba(43,56,41,0.55);
+  background: rgba(255,255,255,0.22);
+}
+.mobile-menu-toggle span,
+.mobile-menu-toggle span::before,
+.mobile-menu-toggle span::after {
+  display: block;
+  width: 19px;
+  height: 2px;
+  border-radius: 999px;
+  background: currentColor;
+  transition: transform 0.25s var(--ease), opacity 0.25s var(--ease);
+}
+.mobile-menu-toggle span { position: relative; }
+.mobile-menu-toggle span::before,
+.mobile-menu-toggle span::after {
+  content: "";
+  position: absolute;
+  left: 0;
+}
+.mobile-menu-toggle span::before { top: -6px; }
+.mobile-menu-toggle span::after { top: 6px; }
+html.nav-open .mobile-menu-toggle span { transform: rotate(45deg); }
+html.nav-open .mobile-menu-toggle span::before { transform: translateY(6px) rotate(90deg); }
+html.nav-open .mobile-menu-toggle span::after { opacity: 0; }
+
+.mobile-panel {
+  display: none;
+}
+
+/* language toggle */
+.lang-seal {
+  display: flex;
+  border: 1.5px solid rgba(242,235,221,0.6);
+  border-radius: 999px;
+  overflow: hidden;
+  font-family: 'Fraunces', serif;
+  font-weight: 700;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  position: relative;
+  transition: border-color 0.4s;
+}
+.topbar.scrolled .lang-seal { border-color: var(--forest); }
+.lang-seal button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 6px 14px;
+  font-family: inherit;
+  font-weight: inherit;
+  font-size: inherit;
+  letter-spacing: inherit;
+  position: relative;
+  z-index: 1;
+  color: rgba(242,235,221,0.7);
+  transition: color 0.3s var(--ease);
+}
+.topbar.scrolled .lang-seal button { color: var(--forest); }
+.lang-seal .seal-fill {
+  position: absolute;
+  top: 0; bottom: 0; left: 0;
+  width: 50%;
+  background: rgba(242,235,221,0.25);
+  border-radius: 999px;
+  transition: transform 0.35s var(--ease);
+  z-index: 0;
+}
+.topbar.scrolled .lang-seal .seal-fill { background: var(--forest); }
+.lang-seal.is-en .seal-fill { transform: translateX(100%); }
+.lang-seal button.active { color: var(--cream) !important; }
+.topbar.scrolled .lang-seal button.active { color: var(--cream) !important; }
+
+/* ========================= HERO (full-screen) ========================= */
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr;
+  overflow: hidden;
+}
+
+.hero-panel {
+  position: relative;
+  overflow: hidden;
+  cursor: default;
+}
+.hero-panel img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 1.2s var(--ease), filter 0.6s var(--ease);
+  filter: brightness(0.72) saturate(1.05);
+}
+.hero-panel:hover img {
+  transform: scale(1.06);
+  filter: brightness(0.82) saturate(1.15);
+}
+.hero-panel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(20,30,18,0.9) 0%, transparent 55%);
+  pointer-events: none;
+  transition: opacity 0.5s;
+}
+
+/* centre panel gets a gradient overlay top-to-bottom for the text */
+.hero-panel.hero-main::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom,
+    rgba(20,30,18,0.4) 0%,
+    rgba(20,30,18,0.1) 35%,
+    rgba(20,30,18,0.3) 65%,
+    rgba(20,30,18,0.85) 100%
+  );
+  z-index: 1;
+  pointer-events: none;
+}
+.hero-panel.hero-main::after { display: none; }
+
+.hero-content {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  padding: 48px 36px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* side panels */
+.hero-side-label {
+  position: absolute;
+  bottom: 24px; left: 24px; right: 24px;
+  z-index: 2;
+  color: var(--cream);
+  font-family: 'Fraunces', serif;
+  font-size: 1rem;
+  font-weight: 600;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.35s var(--ease), transform 0.35s var(--ease);
+  text-shadow: 0 1px 6px rgba(0,0,0,0.5);
+}
+.hero-panel:hover .hero-side-label {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* main hero text */
+.hero-logo-img {
+  width: 110px;
+  height: auto;
+  margin-bottom: 16px;
+  filter: brightness(0) invert(1);
+  opacity: 0.95;
+}
+.hero-eyebrow {
+  font-family: 'Caveat', cursive;
+  font-size: 1.35rem;
+  color: var(--gold-light);
+  display: block;
+  margin-bottom: 6px;
+}
+.hero h1 {
+  font-size: clamp(2.4rem, 5vw, 4.2rem);
+  line-height: 1.05;
+  color: #fff;
+  margin-bottom: 14px;
+  text-shadow: 0 2px 20px rgba(0,0,0,0.4);
+}
+.hero h1 em { font-style: italic; color: var(--gold-light); }
+.hero-lede {
+  font-size: 1.05rem;
+  color: rgba(255,255,255,0.8);
+  max-width: 360px;
+  margin: 0 auto 28px;
+  line-height: 1.65;
+}
+.hero-ctas {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* Dividers between panels */
+.hero-divider {
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 2px;
+  background: rgba(242,235,221,0.15);
+  z-index: 5;
+  pointer-events: none;
+}
+.hero-divider:first-of-type { left: 33.33%; }
+.hero-divider:last-of-type  { left: 66.66%; }
+
+/* ========================= BUTTONS ========================= */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 13px 26px;
+  border-radius: 999px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease),
+              background 0.25s var(--ease), color 0.25s var(--ease);
+  min-height: 48px;
+  justify-content: center;
+}
+.btn-primary {
+  background: var(--rust);
+  color: var(--cream);
+}
+.btn-primary:hover {
+  background: var(--rust-deep);
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px -10px rgba(181,83,45,0.55);
+}
+.btn-outline {
+  background: transparent;
+  color: #fff;
+  border-color: rgba(255,255,255,0.5);
+}
+.btn-outline:hover {
+  background: rgba(255,255,255,0.12);
+  border-color: #fff;
+  transform: translateY(-2px);
+}
+.btn-forest {
+  background: var(--forest);
+  color: var(--cream);
+}
+.btn-forest:hover {
+  background: var(--forest-mid);
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px -10px rgba(43,56,41,0.5);
+}
+
+/* ========================= SECTION SHELL ========================= */
+.section-wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 96px 32px;
+}
+.section-head {
+  text-align: center;
+  margin-bottom: 60px;
+}
+.section-head .kicker {
+  font-family: 'Caveat', cursive;
+  color: var(--rust);
+  font-size: 1.45rem;
+  display: inline-block;
+  transform: rotate(-1.5deg);
+  margin-bottom: 4px;
+}
+.section-head h2 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  color: var(--forest);
+  line-height: 1.1;
+}
+.section-head p {
+  font-size: 1rem;
+  color: var(--ink-soft);
+  max-width: 480px;
+  margin: 10px auto 0;
+}
+
+/* ========================= SIGNATURE FEATURES ROW ========================= */
+.features-band {
+  background: var(--forest);
+  padding: 0;
+}
+.features-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+}
+.feature-item {
+  padding: 44px 32px;
+  text-align: center;
+  border-right: 1px solid rgba(242,235,221,0.1);
+  transition: background 0.3s;
+}
+.feature-item:last-child { border-right: none; }
+.feature-item:hover { background: rgba(242,235,221,0.05); }
+.feature-icon {
+  font-size: 2.2rem;
+  margin-bottom: 12px;
+  display: block;
+}
+.feature-item h4 {
+  font-family: 'Fraunces', serif;
+  color: var(--gold);
+  font-size: 1.1rem;
+  margin-bottom: 6px;
+}
+.feature-item p {
+  font-size: 0.88rem;
+  color: rgba(242,235,221,0.65);
+  line-height: 1.5;
+}
+
+/* ========================= PHOTO SHOWCASE ========================= */
+.showcase {
+  background: var(--cream-paper);
+}
+.showcase-grid {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  grid-template-rows: auto auto;
+  gap: 16px;
+}
+.showcase-item {
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  cursor: default;
+}
+.showcase-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.8s var(--ease), filter 0.5s;
+  filter: saturate(1.05);
+}
+.showcase-item:hover img {
+  transform: scale(1.04);
+  filter: saturate(1.15) brightness(1.02);
+}
+.showcase-item.large {
+  grid-row: span 2;
+  min-height: 620px;
+}
+.showcase-item.medium {
+  min-height: 290px;
+}
+.showcase-item::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(20,30,18,0.7) 0%, transparent 50%);
+  opacity: 0;
+  transition: opacity 0.4s;
+  border-radius: 16px;
+}
+.showcase-item:hover::after { opacity: 1; }
+.showcase-caption {
+  position: absolute;
+  bottom: 20px; left: 20px;
+  z-index: 2;
+  color: var(--cream);
+  font-family: 'Fraunces', serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.35s var(--ease), transform 0.35s var(--ease);
+}
+.showcase-item:hover .showcase-caption {
+  opacity: 1;
+  transform: translateY(0);
+}
+.showcase-badge {
+  position: absolute;
+  top: 16px; left: 16px;
+  background: var(--rust);
+  color: var(--cream);
+  font-family: 'Caveat', cursive;
+  font-size: 1.1rem;
+  padding: 5px 14px 7px;
+  border-radius: 999px;
+  transform: rotate(-2deg);
+  z-index: 3;
+  box-shadow: 0 4px 12px -4px rgba(181,83,45,0.5);
+}
+
+/* ========================= MENU ========================= */
+.menu-bg {
+  background: var(--cream);
+}
+.menu-layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 64px;
+  align-items: start;
+}
+
+.menu-category {
+  font-family: 'Caveat', cursive;
+  font-size: 1.7rem;
+  color: var(--rust);
+  margin: 52px 0 4px;
+  transform: rotate(-1deg);
+  display: inline-block;
+}
+.menu-category:first-of-type { margin-top: 0; }
+.menu-item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: baseline;
+  gap: 16px;
+  padding: 20px 12px;
+  border-bottom: 1px dashed var(--line);
+  border-radius: 8px;
+  transition: background 0.25s var(--ease), padding-left 0.25s var(--ease);
+}
+.menu-item:hover {
+  background: rgba(181,83,45,0.04);
+  padding-left: 18px;
+}
+.menu-item:last-child { border-bottom: none; }
+.menu-item .name {
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  font-size: 1.15rem;
+  color: var(--forest);
+}
+.menu-item .desc {
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+  margin-top: 3px;
+}
+.menu-item .price {
+  font-family: 'Fraunces', serif;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--rust);
+  white-space: nowrap;
+}
+
+/* Sticky menu sidebar */
+.menu-sidebar {
+  position: sticky;
+  top: 100px;
+}
+.menu-photo-card {
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  margin-bottom: 24px;
+}
+.menu-photo-card img {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  transition: transform 0.6s var(--ease);
+}
+.menu-photo-card:hover img { transform: scale(1.04); }
+
+.weekend-box {
+  background: var(--forest);
+  color: var(--cream);
+  border-radius: 20px;
+  padding: 28px;
+  position: relative;
+  overflow: hidden;
+}
+.weekend-box::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 85% 10%, rgba(201,160,91,0.2), transparent 55%);
+  pointer-events: none;
+}
+.weekend-box h3 {
+  color: var(--gold);
+  margin-bottom: 10px;
+  font-size: 1.25rem;
+}
+.weekend-box p { opacity: 0.85; font-size: 0.9rem; margin-bottom: 4px; line-height: 1.5; }
+.weekend-box .wk-price {
+  font-family: 'Fraunces', serif;
+  font-size: 1.35rem;
+  color: var(--gold);
+  margin-top: 12px;
+  display: block;
+}
+
+/* ========================= REVIEWS ========================= */
+.reviews-bg {
+  background: var(--cream-deep);
+}
+.reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+.review-card {
+  background: var(--cream-paper);
+  border-radius: 16px;
+  padding: 28px;
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+}
+.review-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 2px 0 rgba(255,255,255,0.4) inset, 0 28px 56px -24px rgba(0,0,0,0.35);
+}
+.review-stars { color: var(--gold); letter-spacing: 2px; }
+.review-quote { font-size: 0.94rem; color: var(--ink); flex-grow: 1; line-height: 1.65; }
+.review-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  color: var(--forest);
+  font-size: 0.92rem;
+  border-top: 1px dashed var(--line);
+  padding-top: 12px;
+}
+.review-meta .time {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+}
+.owner-reply {
+  background: var(--cream-deep);
+  border-left: 3px solid var(--rust);
+  padding: 10px 14px;
+  border-radius: 0 8px 8px 0;
+  font-size: 0.85rem;
+  font-style: italic;
+  opacity: 0.9;
+}
+.owner-reply b { font-style: normal; color: var(--rust); }
+
+/* ========================= VISIT / MAP ========================= */
+.visit-bg { background: var(--forest); color: var(--cream); }
+.visit-bg .section-head h2 { color: var(--cream); }
+.visit-bg .section-head .kicker { color: var(--gold); }
+.visit-bg .section-head p { color: rgba(242,235,221,0.65); }
+.visit-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 48px;
+  align-items: start;
+}
+.visit-card {
+  background: rgba(242,235,221,0.06);
+  border: 1px solid rgba(242,235,221,0.12);
+  border-radius: 20px;
+  padding: 36px;
+}
+.visit-card h3 {
+  color: var(--gold);
+  font-size: 1.2rem;
+  margin-bottom: 22px;
+}
+.visit-row {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+.visit-row svg { flex-shrink: 0; margin-top: 3px; color: var(--gold); width: 20px; height: 20px; }
+.visit-row .label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.55; margin-bottom: 2px; }
+.visit-row .value { font-size: 1rem; }
+.visit-row a { color: var(--cream); border-bottom: 1px solid rgba(201,160,91,0.4); transition: color 0.25s, border-color 0.25s; }
+.visit-row a:hover { color: var(--gold); border-color: var(--gold); }
+
+.hours-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+.hours-table td { padding: 8px 0; border-bottom: 1px solid rgba(242,235,221,0.08); font-size: 0.93rem; }
+.hours-table td:last-child { text-align: right; font-family: 'Fraunces', serif; font-weight: 600; }
+.hours-table tr:last-child td { border-bottom: none; }
+
+.map-card {
+  border-radius: 20px;
+  overflow: hidden;
+  min-height: 440px;
+  border: 1px solid rgba(242,235,221,0.12);
+  box-shadow: 0 20px 60px -30px rgba(0,0,0,0.5);
+}
+.map-card iframe { width: 100%; height: 100%; min-height: 440px; border: 0; display: block; filter: sepia(0.15) saturate(0.9); }
+
+/* ========================= FOOTER ========================= */
+footer {
+  background: var(--forest-deep);
+  color: var(--cream);
+  text-align: center;
+  padding: 40px 32px;
+}
+.footer-logo { width: 64px; height: auto; margin: 0 auto 16px; object-fit: contain; opacity: 0.9; border-radius: 8px; }
+.footer-text { font-size: 0.84rem; opacity: 0.5; line-height: 1.7; }
+.footer-links { display: flex; justify-content: center; gap: 24px; margin: 14px 0; }
+.footer-links a { font-size: 0.85rem; opacity: 0.6; transition: opacity 0.25s; }
+.footer-links a:hover { opacity: 1; }
+
+/* ========================= BACK TO TOP ========================= */
+.back-to-top {
+  position: fixed;
+  bottom: 28px; right: 28px;
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: var(--forest);
+  color: var(--cream);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(10px);
+  transition: opacity 0.3s var(--ease), transform 0.3s var(--ease), background 0.3s;
+  z-index: 90;
+  box-shadow: 0 10px 28px -12px rgba(0,0,0,0.4);
+}
+.back-to-top.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+.back-to-top:hover { background: var(--rust); }
+.back-to-top svg { width: 20px; height: 20px; }
+
+.mobile-action-bar {
+  display: none;
+}
+
+.mobile-action-overlay,
+.mobile-action-window {
+  display: none;
+}
+
+/* ========================= REVEAL ========================= */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+}
+.reveal.is-visible { opacity: 1; transform: translateY(0); }
+
+/* ========================= LANGUAGE LOGIC ========================= */
+[lang-en] { display: none; }
+html.lang-en [lang-hu] { display: none; }
+html.lang-en [lang-en] { display: initial; }
+html.lang-en .menu-item [lang-en],
+html.lang-en .review-card [lang-en],
+html.lang-en .owner-reply [lang-en],
+html.lang-en .feature-item [lang-en],
+html.lang-en .showcase-caption [lang-en],
+html.lang-en .hero-side-label [lang-en] { display: block; }
+html.lang-en .hours-table [lang-en] { display: table-cell; }
+html.lang-en .btn[lang-en] { display: inline-flex; }
+
+/* ========================= RESPONSIVE ========================= */
+@media (max-width: 960px) {
+  body { padding-bottom: env(safe-area-inset-bottom); }
+  html.nav-open .topbar {
+    background: rgba(242,235,221,0.98);
+    backdrop-filter: blur(16px) saturate(1.15);
+    border-bottom-color: var(--line);
+  }
+  html.nav-open .brandmark,
+  html.nav-open .mobile-menu-toggle {
+    color: var(--forest);
+  }
+  html.nav-open .mobile-menu-toggle {
+    border-color: rgba(43,56,41,0.55);
+    background: rgba(255,255,255,0.28);
+  }
+  .topbar-inner {
+    padding: 12px 18px;
+  }
+  .brandmark {
+    font-size: 1.05rem;
+    max-width: calc(100vw - 180px);
+  }
+  .brandmark-logo {
+    width: 40px;
+    height: 40px;
+  }
+  .topbar-right { gap: 10px; }
+  .mobile-menu-toggle { display: inline-flex; }
+  .mobile-panel {
+    display: grid;
+    position: fixed;
+    inset: 70px 14px auto;
+    z-index: 190;
+    background: rgba(250,246,238,0.98);
+    border: 1px solid rgba(42,37,34,0.12);
+    border-radius: 18px;
+    box-shadow: 0 24px 70px -34px rgba(0,0,0,0.45);
+    padding: 10px;
+    opacity: 0;
+    pointer-events: none;
+    transform: translate3d(0, -10px, 0) scale(0.985);
+    transition: opacity 0.32s var(--ease), transform 0.32s var(--ease);
+    will-change: opacity, transform;
+  }
+  html.nav-open .mobile-panel {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  .mobile-panel a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 52px;
+    padding: 0 14px;
+    border-radius: 12px;
+    font-family: 'Fraunces', serif;
+    font-weight: 650;
+    color: var(--forest);
+    border-bottom: 1px solid rgba(42,37,34,0.07);
+  }
+  .mobile-panel a:last-child { border-bottom: none; }
+  .mobile-panel a:active { background: var(--cream-deep); }
+  .hero { grid-template-columns: 1fr; min-height: 100svh; }
+  .hero-panel { display: none; }
+  .hero-panel.hero-main { display: block; min-height: 100svh; }
+  .hero-panel.hero-main img {
+    position: absolute;
+    inset: 0;
+  }
+  .hero-content {
+    top: 0; left: 0; right: 0; bottom: 0;
+    height: 100svh;
+    min-height: unset;
+    justify-content: flex-end;
+    padding-top: max(80px, calc(env(safe-area-inset-top) + 64px));
+    padding-left: 24px;
+    padding-right: 24px;
+    padding-bottom: max(120px, calc(env(safe-area-inset-bottom) + 100px));
+    overflow: hidden;
+  }
+  .hero h1 { font-size: clamp(1.9rem, 9.5vw, 3rem); line-height: 1.08; }
+  .hero-eyebrow { font-size: 1.1rem; margin-bottom: 6px; }
+  .hero-lede {
+    font-size: 1rem;
+    max-width: 31rem;
+    margin-bottom: 20px;
+  }
+  .hero-ctas {
+    width: min(100%, 360px);
+    margin: 0 auto;
+  }
+  .hero-ctas .btn {
+    width: 100%;
+  }
+  .hero-divider { display: none; }
+  .features-grid { grid-template-columns: repeat(2,1fr); }
+  .showcase-grid { grid-template-columns: 1fr; }
+  .showcase-item.large { min-height: 380px; grid-row: auto; }
+  .showcase-item.medium { min-height: 240px; }
+  .menu-layout { grid-template-columns: 1fr; }
+  .menu-sidebar { position: static; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .visit-grid { grid-template-columns: 1fr; }
+  .nav-links { display: none; }
+  .section-wrap { padding: 72px 24px; }
+  .back-to-top {
+    bottom: calc(82px + env(safe-area-inset-bottom));
+    right: 16px;
+  }
+  .mobile-action-bar {
+    position: fixed;
+    left: 12px;
+    right: 12px;
+    bottom: max(12px, env(safe-area-inset-bottom));
+    z-index: 160;
+    display: block;
+  }
+  .mobile-action-toggle {
+    width: 100%;
+    min-height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 0 16px 0 18px;
+    border-radius: 18px;
+    background: rgba(250,246,238,0.96);
+    color: var(--forest);
+    border: 1px solid rgba(42,37,34,0.12);
+    box-shadow: 0 18px 54px -28px rgba(0,0,0,0.48);
+    backdrop-filter: blur(14px) saturate(1.1);
+    cursor: pointer;
+    transform: translate3d(0, 0, 0);
+    transition: transform 0.34s var(--ease), box-shadow 0.34s var(--ease), background 0.34s var(--ease);
+  }
+  .mobile-action-toggle:active {
+    transform: translate3d(0, 2px, 0) scale(0.99);
+  }
+  .mobile-action-toggle strong {
+    font-family: 'Fraunces', serif;
+    font-size: 1rem;
+    line-height: 1.1;
+  }
+  .mobile-action-toggle small {
+    display: block;
+    margin-top: 2px;
+    color: var(--ink-soft);
+    font-size: 0.78rem;
+    line-height: 1.2;
+  }
+  .mobile-action-toggle svg {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+    color: var(--rust);
+    transition: transform 0.34s var(--ease);
+  }
+  html.action-window-open .mobile-action-toggle {
+    transform: translate3d(0, 92px, 0);
+    pointer-events: none;
+  }
+  html.action-window-open .mobile-action-toggle svg {
+    transform: rotate(45deg);
+  }
+  .mobile-action-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 210;
+    display: block;
+    background: rgba(26,36,24,0.34);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.34s var(--ease);
+  }
+  html.action-window-open .mobile-action-overlay {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .mobile-action-window {
+    position: fixed;
+    left: 12px;
+    right: 12px;
+    bottom: max(12px, env(safe-area-inset-bottom));
+    z-index: 220;
+    display: grid;
+    gap: 10px;
+    padding: 16px;
+    border-radius: 22px;
+    background: rgba(250,246,238,0.98);
+    border: 1px solid rgba(42,37,34,0.12);
+    box-shadow: 0 18px 54px -28px rgba(0,0,0,0.48);
+    backdrop-filter: blur(14px) saturate(1.1);
+    opacity: 0;
+    pointer-events: none;
+    transform: translate3d(0, 26px, 0) scale(0.98);
+    transform-origin: bottom center;
+    transition: opacity 0.38s var(--ease), transform 0.38s var(--ease);
+    will-change: opacity, transform;
+  }
+  html.action-window-open .mobile-action-window {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  .mobile-action-window-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 2px 2px 4px;
+  }
+  .mobile-action-window-head strong {
+    display: block;
+    color: var(--forest);
+    font-family: 'Fraunces', serif;
+    font-size: 1.16rem;
+    line-height: 1.15;
+  }
+  .mobile-action-window-head span {
+    display: block;
+    margin-top: 3px;
+    color: var(--ink-soft);
+    font-size: 0.84rem;
+    line-height: 1.35;
+  }
+  .mobile-action-close {
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+    border: 1px solid rgba(42,37,34,0.1);
+    border-radius: 50%;
+    background: var(--cream);
+    color: var(--forest);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.25s var(--ease), background 0.25s var(--ease);
+  }
+  .mobile-action-close:active {
+    transform: scale(0.95);
+    background: var(--cream-deep);
+  }
+  .mobile-action-close svg {
+    width: 18px;
+    height: 18px;
+  }
+  .mobile-action {
+    display: inline-flex;
+    min-height: 54px;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border-radius: 14px;
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 0.98rem;
+    transition: transform 0.26s var(--ease), filter 0.26s var(--ease);
+  }
+  .mobile-action:active {
+    transform: scale(0.985);
+    filter: brightness(0.96);
+  }
+  .mobile-action svg {
+    width: 18px;
+    height: 18px;
+  }
+  .mobile-action.call {
+    background: var(--forest);
+    color: var(--cream);
+  }
+  .mobile-action.route {
+    background: var(--rust);
+    color: var(--cream);
+  }
+  html.lang-en .mobile-action-toggle [lang-en],
+  html.lang-en .mobile-action-window-head [lang-en] {
+    display: block;
+  }
+}
+@media (max-width: 600px) {
+  .hero-content { padding-inline: 18px; }
+  .features-grid { grid-template-columns: 1fr 1fr; }
+  .feature-item { padding: 26px 14px; }
+  .feature-icon { font-size: 1.85rem; margin-bottom: 8px; }
+  .feature-item h4 { font-size: 1rem; }
+  .feature-item p { font-size: 0.82rem; }
+  .menu-sidebar { grid-template-columns: 1fr; }
+  .section-wrap { padding: 58px 18px; }
+  .section-head { margin-bottom: 34px; }
+  .section-head h2 { font-size: clamp(1.85rem, 10vw, 2.45rem); }
+  .showcase-item,
+  .showcase-item::after,
+  .menu-photo-card,
+  .weekend-box,
+  .review-card,
+  .visit-card,
+  .map-card {
+    border-radius: 14px;
+  }
+  .showcase-item.large,
+  .showcase-item.medium {
+    min-height: 255px;
+  }
+  .showcase-caption {
+    opacity: 1;
+    transform: none;
+    bottom: 14px;
+    left: 14px;
+    right: 14px;
+    font-size: 0.98rem;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.5);
+  }
+  .showcase-item::after { opacity: 1; }
+  .menu-layout { gap: 36px; }
+  .menu-category {
+    margin-top: 36px;
+    font-size: 1.55rem;
+  }
+  .menu-item {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 18px 4px;
+  }
+  .menu-item:hover {
+    background: transparent;
+    padding-left: 4px;
+  }
+  .menu-item .name {
+    font-size: 1.08rem;
+    line-height: 1.28;
+  }
+  .menu-item .desc {
+    font-size: 0.86rem;
+    line-height: 1.5;
+  }
+  .menu-item .price {
+    font-size: 1.02rem;
+    justify-self: start;
+    background: rgba(181,83,45,0.08);
+    padding: 3px 9px;
+    border-radius: 999px;
+  }
+  .weekend-box { padding: 22px; }
+  .reviews-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .review-card { padding: 22px; }
+  .review-meta {
+    align-items: flex-start;
+    gap: 8px;
+    flex-direction: column;
+  }
+  .visit-card { padding: 24px 20px; }
+  .visit-row {
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+  .visit-row .value,
+  .visit-row a {
+    overflow-wrap: anywhere;
+  }
+  .hours-table td {
+    display: block;
+    width: 100%;
+    padding: 7px 0 0;
+    border-bottom: none;
+  }
+  .hours-table td:last-child {
+    text-align: left;
+    padding: 0 0 9px;
+    border-bottom: 1px solid rgba(242,235,221,0.08);
+  }
+  .hours-table tr:last-child td:last-child { border-bottom: none; }
+  .map-card,
+  .map-card iframe {
+    min-height: 320px;
+  }
+  footer {
+    padding: 34px 18px 108px;
+  }
+  .footer-logo { width: 60px; height: 60px; object-fit: contain; }
+  .footer-links {
+    flex-wrap: wrap;
+    gap: 10px 18px;
+  }
+  .footer-links a {
+    min-height: 36px;
+    display: inline-flex;
+    align-items: center;
+  }
+}
+@media (max-width: 380px) {
+  .brandmark {
+    font-size: 0.98rem;
+    gap: 7px;
+    max-width: calc(100vw - 160px);
+  }
+  .lang-seal button { padding: 6px 10px; }
+  .mobile-menu-toggle {
+    width: 42px;
+    height: 42px;
+  }
+}
+
+[lang-en] { display: none; }
+html.lang-en [lang-hu] { display: none !important; }
+html.lang-en [lang-en] { display: initial; }
+html.lang-en .menu-item [lang-en],
+html.lang-en .review-card [lang-en],
+html.lang-en .owner-reply [lang-en],
+html.lang-en .feature-item [lang-en],
+html.lang-en .showcase-caption [lang-en],
+html.lang-en .hero-side-label [lang-en] { display: block; }
+html.lang-en .hours-table [lang-en] { display: table-cell; }
+html.lang-en .btn[lang-en] { display: inline-flex; }
+html:not(.lang-en) [lang-en] { display: none !important; }
+html:not(.lang-en) .hours-table [lang-en] { display: none !important; }
+@media (max-width: 600px) {
+  html.lang-en .hours-table [lang-en] { display: block; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===================== TOPBAR ===================== -->
+<div class="topbar" id="topbar">
+  <div class="topbar-inner">
+    <a href="#top" class="brandmark">
+      <img src="images/logo.jpg" alt="Vértes Bisztró logo" class="brandmark-logo" onerror="this.style.display='none'">
+      Vértes Bisztró
+    </a>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="#etlap" lang-hu>Étlap</a><a href="#etlap" lang-en>Menu</a></li>
+        <li><a href="#velemenyek" lang-hu>Vélemények</a><a href="#velemenyek" lang-en>Reviews</a></li>
+        <li><a href="#latogatas" lang-hu>Elérhetőség</a><a href="#latogatas" lang-en>Contact</a></li>
+      </ul>
+    </nav>
+    <div class="topbar-right">
+      <div class="lang-seal">
+        <span class="seal-fill" aria-hidden="true"></span>
+        <button class="active" data-lang="hu" type="button">HU</button>
+        <button data-lang="en" type="button">EN</button>
+      </div>
+      <button class="mobile-menu-toggle" id="mobileMenuToggle" type="button" aria-label="Menü megnyitása" aria-expanded="false" aria-controls="mobilePanel">
+        <span aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
+  <nav class="mobile-panel" id="mobilePanel" aria-label="Mobil navigáció">
+    <a href="#etlap"><span lang-hu>Étlap</span><span lang-en>Menu</span><span aria-hidden="true">→</span></a>
+    <a href="#velemenyek"><span lang-hu>Vélemények</span><span lang-en>Reviews</span><span aria-hidden="true">→</span></a>
+    <a href="#latogatas"><span lang-hu>Elérhetőség</span><span lang-en>Contact</span><span aria-hidden="true">→</span></a>
+  </nav>
+</div>
+
+<!-- ===================== HERO ===================== -->
+<section class="hero" id="top">
+  <!-- LEFT panel -->
+  <div class="hero-panel">
+    <img src="images/dumpling.jpg" alt="Túrógombóc gombamártással">
+    <div class="hero-side-label">
+      <span lang-hu>Túrógombóc gombamártással</span>
+      <span lang-en>Cottage cheese dumplings in mushroom sauce</span>
+    </div>
+  </div>
+
+  <!-- CENTRE panel — main content -->
+  <div class="hero-panel hero-main">
+    <img src="images/chicken-cream.jpg" alt="Csirkemell jóasszony módra">
+    <div class="hero-content">
+      <span class="hero-eyebrow">
+        <span lang-hu>Csákberény, a Vértes lábánál</span>
+        <span lang-en>At the foot of the Vértes hills</span>
+      </span>
+      <h1>
+        <span lang-hu>Otthonos ízek,<br><em>nagylelkű</em> adagok</span>
+        <span lang-en>Homely flavours,<br><em>generous</em> portions</span>
+      </h1>
+      <p class="hero-lede" lang-hu>Friss alapanyagok, kézzel készített ételek és hangulatos bár — reggelitől esti vacsoráig.</p>
+      <p class="hero-lede" lang-en>Fresh ingredients, handmade dishes and a great bar — from breakfast through to dinner.</p>
+      <div class="hero-ctas">
+        <a href="#etlap" class="btn btn-primary" lang-hu>Étlap megtekintése</a>
+        <a href="#etlap" class="btn btn-primary" lang-en>View the menu</a>
+        <a href="#latogatas" class="btn btn-outline" lang-hu>Útvonal &amp; nyitvatartás</a>
+        <a href="#latogatas" class="btn btn-outline" lang-en>Directions &amp; hours</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT panel -->
+  <div class="hero-panel">
+    <img src="images/burgers.jpg" alt="Classic Sajtburger és sült krumpli">
+    <div class="hero-side-label">
+      <span lang-hu>Classic Sajtburger és hasábburgonya</span>
+      <span lang-en>Classic Cheeseburger and fries</span>
+    </div>
+  </div>
+
+  <div class="hero-divider"></div>
+  <div class="hero-divider"></div>
+</section>
+
+<!-- ===================== FEATURES BAND ===================== -->
+<div class="features-band">
+  <div class="features-grid">
+    <div class="feature-item">
+      <span class="feature-icon">🌿</span>
+      <h4><span lang-hu>Friss alapanyagok</span><span lang-en>Fresh ingredients</span></h4>
+      <p lang-hu>Helyi termelőktől, szezonálisan</p>
+      <p lang-en>Locally sourced, seasonal produce</p>
+    </div>
+    <div class="feature-item">
+      <span class="feature-icon">👨‍🍳</span>
+      <h4><span lang-hu>Kézműves konyha</span><span lang-en>Handcrafted kitchen</span></h4>
+      <p lang-hu>Minden fogás házilag készül</p>
+      <p lang-en>Every dish made from scratch</p>
+    </div>
+    <div class="feature-item">
+      <span class="feature-icon">🍹</span>
+      <h4><span lang-hu>Bár &amp; koktélok</span><span lang-en>Bar &amp; cocktails</span></h4>
+      <p lang-hu>Hangulatos bár, válogatott italok</p>
+      <p lang-en>Cosy bar with curated drinks</p>
+    </div>
+    <div class="feature-item">
+      <span class="feature-icon">🏡</span>
+      <h4><span lang-hu>Családias hangulat</span><span lang-en>Family atmosphere</span></h4>
+      <p lang-hu>Meleg, befogadó környezet</p>
+      <p lang-en>Warm, welcoming environment</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== PHOTO SHOWCASE ===================== -->
+<div class="showcase">
+  <div class="section-wrap" style="padding-bottom: 96px;">
+    <div class="section-head reveal">
+      <span class="kicker" lang-hu>A konyhánkból</span>
+      <span class="kicker" lang-en>From our kitchen</span>
+      <h2 lang-hu>Minden tányér egy történet</h2>
+      <h2 lang-en>Every plate tells a story</h2>
+      <p lang-hu>Kézzel készített fogások, gondosan válogatott alapanyagokból</p>
+      <p lang-en>Handmade dishes from carefully chosen ingredients</p>
+    </div>
+    <div class="showcase-grid reveal">
+      <div class="showcase-item large">
+        <img src="images/burgers.jpg" alt="Classic Sajtburger és sült krumpli">
+        <div class="showcase-badge" lang-hu>★ Bestseller</div>
+        <div class="showcase-badge" lang-en>★ Bestseller</div>
+        <div class="showcase-caption">
+          <span lang-hu>Classic Sajtburger · 4 690 Ft</span>
+          <span lang-en>Classic Cheeseburger · 4 690 Ft</span>
+        </div>
+      </div>
+      <div>
+        <div class="showcase-item medium" style="margin-bottom: 16px;">
+          <img src="images/dumpling.jpg" alt="Túrógombóc gombamártással">
+          <div class="showcase-caption">
+            <span lang-hu>Túrógombóc citrusos tejföllel · 1 990 Ft</span>
+            <span lang-en>Cottage cheese dumplings, citrus cream · 1 990 Ft</span>
+          </div>
+        </div>
+        <div class="showcase-item medium">
+          <img src="images/chicken-roasted.jpg" alt="Roston csirkemell sült krumplival">
+          <div class="showcase-caption">
+            <span lang-hu>Csirkemell steak jóasszony módra · 3 990 Ft</span>
+            <span lang-en>Chicken steak "jóasszony" style · 3 990 Ft</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== MENU ===================== -->
+<div class="menu-bg" id="etlap">
+  <div class="section-wrap">
+    <div class="section-head reveal">
+      <span class="kicker" lang-hu>Vértes Bisztró</span>
+      <span class="kicker" lang-en>Vértes Bisztró</span>
+      <h2 lang-hu>Étlap</h2>
+      <h2 lang-en>Our Menu</h2>
+    </div>
+
+    <div class="menu-layout reveal">
+      <div class="menu-list">
+
+        <p class="menu-category" lang-hu>Levesek</p>
+        <p class="menu-category" lang-en>Soups</p>
+
+        <div class="menu-item">
+          <div>
+            <div class="name"><span lang-hu>Csángóleves</span><span lang-en>Csángó Soup</span></div>
+            <div class="desc"><span lang-hu>zöldségek, csombor, lestyán, húsgombóc</span><span lang-en>vegetables, savory herbs, lovage, meatballs</span></div>
+          </div>
+          <div class="price">1 190 Ft</div>
+        </div>
+
+        <div class="menu-item">
+          <div>
+            <div class="name"><span lang-hu>Gazpacho</span><span lang-en>Gazpacho</span></div>
+            <div class="desc"><span lang-hu>hideg zöldségleves – paradicsom, uborka, paprika, hagyma</span><span lang-en>cold soup – tomato, cucumber, pepper, onion</span></div>
+          </div>
+          <div class="price">1 590 Ft</div>
+        </div>
+
+        <p class="menu-category" lang-hu>Főételek</p>
+        <p class="menu-category" lang-en>Main Courses</p>
+
+        <div class="menu-item">
+          <div>
+            <div class="name"><span lang-hu>Füstölt sajtos csirke</span><span lang-en>Smoked Cheese Chicken</span></div>
+            <div class="desc"><span lang-hu>füstölt sajtos ragu, csirkemell csíkok, jázmin rizs</span><span lang-en>smoked cheese ragout, chicken strips, jasmine rice</span></div>
+          </div>
+          <div class="price">2 390 Ft</div>
+        </div>
+
+        <div class="menu-item">
+          <div>
+            <div class="name"><span lang-hu>Lecsós sertéskaraj</span><span lang-en>Pork Loin in Lecsó</span></div>
+            <div class="desc"><span lang-hu>tarhonya, csemege uborka</span><span lang-en>egg-drop pasta, pickled cucumber</span></div>
+          </div>
+          <div class="price">3 890 Ft</div>
+        </div>
+
+        <div class="menu-item">
+          <div>
+            <div class="name"><span lang-hu>Csirkemell steak jóasszony módra</span><span lang-en>Chicken Steak "Jóasszony"</span></div>
+            <div class="desc"><span lang-hu>zöldborsós-sonkás-gombás-gyöngyhagymás ragu, steak burgonya</span><span lang-en>pea-ham-mushroom-pearl onion ragout, steak potatoes</span></div>
+          </div>
+          <div class="price">3 990 Ft</div>
+        </div>
+
+        <div class="menu-item">
+          <div>
+            <div class="name"><span lang-hu>Nyári Grill Tál</span><span lang-en>Summer Grill Platter</span></div>
+            <div class="desc"><span lang-hu>rozmaringos sertésszűz, oregánós csirkemell, borsos bélszín, görög saláta, tzatziki, sült burgonya</span><span lang-en>rosemary pork tenderloin, oregano chicken, peppered sirloin, Greek salad, tzatziki, roast potatoes</span></div>
+          </div>
+          <div class="price">4 900 Ft</div>
+        </div>
+
+        <div class="menu-item">
+          <div>
+            <div class="name"><span lang-hu>Grill Sajt</span><span lang-en>Grilled Cheese</span></div>
+            <div class="desc"><span lang-hu>jázmin rizs, grill zöldség</span><span lang-en>jasmine rice, grilled vegetables</span></div>
+          </div>
+          <div class="price">3 490 Ft</div>
+        </div>
+
+        <div class="menu-item">
+          <div>
+            <div class="name"><span lang-hu>Rántott / Roston sült csirkemell</span><span lang-en>Breaded / Grilled Chicken Breast</span></div>
+            <div class="desc"><span lang-hu>sült burgonya</span><span lang-en>roast potatoes</span></div>
+          </div>
+          <div class="price">3 490 Ft</div>
+        </div>
+
+        <p class="menu-category" lang-hu>Saláták</p>
+        <p class="menu-category" lang-en>Salads</p>
+
+        <div class="menu-item">
+          <div>
+            <div class="name"><span lang-hu>Görög Saláta</span><span lang-en>Greek Salad</span></div>
+            <div class="desc"><span lang-hu>natúr / grill sajtos / csirkés</span><span lang-en>plain / with grilled cheese / with chicken</span></div>
+          </div>
+          <div class="price">2 590 – 3 490 Ft</div>
+        </div>
+
+        <div class="menu-item">
+          <div>
+            <div class="name"><span lang-hu>Uborka saláta</span><span lang-en>Cucumber Salad</span></div>
+            <div class="desc"><span lang-hu>natúr / tejfölös</span><span lang-en>plain / with sour cream</span></div>
+          </div>
+          <div class="price">990 – 1 090 Ft</div>
+        </div>
+
+        <p class="menu-category" lang-hu>Burgerek &amp; Quesadilla</p>
+        <p class="menu-category" lang-en>Burgers &amp; Quesadilla</p>
+
+        <div class="menu-item">
+          <div>
+            <div class="name"><span lang-hu>Classic Sajtburger</span><span lang-en>Classic Cheeseburger</span></div>
+            <div class="desc"><span lang-hu>angus marhahús, cheddar, hagymalekvár, majonéz, ketchup, bacon, csemegeuborka, sült burgonya, coleslaw</span><span lang-en>angus beef, cheddar, onion jam, mayo, ketchup, bacon, pickle, fries, coleslaw</span></div>
+          </div>
+          <div class="price">4 690 Ft</div>
+        </div>
+
+        <div class="menu-item">
+          <div>
+            <div class="name"><span lang-hu>Pulled Pork Burger</span><span lang-en>Pulled Pork Burger</span></div>
+            <div class="desc"><span lang-hu>tépett sertéshús, cheddar, hagymalekvár, bbq szósz, majonéz, csemegeuborka, sült burgonya, coleslaw</span><span lang-en>pulled pork, cheddar, onion jam, bbq sauce, mayo, pickle, fries, coleslaw</span></div>
+          </div>
+          <div class="price">4 590 Ft</div>
+        </div>
+
+        <div class="menu-item">
+          <div>
+            <div class="name"><span lang-hu>BBQ Sertés Quesadilla</span><span lang-en>BBQ Pork Quesadilla</span></div>
+            <div class="desc"><span lang-hu>tépett sertéshús, cheddar, bbq szósz, uborka, hagymalekvár, majonéz, sült burgonya</span><span lang-en>pulled pork, cheddar, bbq sauce, pickle, onion jam, mayo, fries</span></div>
+          </div>
+          <div class="price">3 990 Ft</div>
+        </div>
+
+        <p class="menu-category" lang-hu>Gyerekeknek &amp; Desszert</p>
+        <p class="menu-category" lang-en>Kids &amp; Dessert</p>
+
+        <div class="menu-item">
+          <div>
+            <div class="name"><span lang-hu>Gyerek Rántott hús</span><span lang-en>Kids' Breaded Meat</span></div>
+            <div class="desc"><span lang-hu>sült burgonya, ketchup</span><span lang-en>fries, ketchup</span></div>
+          </div>
+          <div class="price">2 390 Ft</div>
+        </div>
+
+        <div class="menu-item">
+          <div>
+            <div class="name"><span lang-hu>Túrógombóc</span><span lang-en>Cottage Cheese Dumplings</span></div>
+            <div class="desc"><span lang-hu>citrusos édes tejföl, epervelő</span><span lang-en>citrus sweet cream, strawberry coulis</span></div>
+          </div>
+          <div class="price">1 990 Ft</div>
+        </div>
+
+      </div><!-- /menu-list -->
+
+      <!-- SIDEBAR -->
+      <div class="menu-sidebar">
+        <div class="menu-photo-card">
+          <img src="images/chicken-cream.jpg" alt="Csirkemell jóasszony módra">
+        </div>
+        <div class="weekend-box reveal">
+          <h3 lang-hu>🌞 Hétvégi Menü</h3>
+          <h3 lang-en>🌞 Weekend Menu</h3>
+          <p lang-hu>Pénteken 12:00–15:00<br>Szombat–Vasárnap 11:00–15:00</p>
+          <p lang-en>Friday 12:00–15:00<br>Saturday–Sunday 11:00–15:00</p>
+          <p lang-hu style="margin-top:10px;"><b>Csángóleves + Füstölt sajtos csirke</b></p>
+          <p lang-en style="margin-top:10px;"><b>Csángó Soup + Smoked Cheese Chicken</b></p>
+          <span class="wk-price">2 600 Ft</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ===================== REVIEWS ===================== -->
+<div class="reviews-bg" id="velemenyek">
+  <div class="section-wrap">
+    <div class="section-head reveal">
+      <span class="kicker" lang-hu>Vendégeink mondták</span>
+      <span class="kicker" lang-en>Our guests say</span>
+      <h2 lang-hu>Vélemények</h2>
+      <h2 lang-en>Reviews</h2>
+    </div>
+
+    <div class="reviews-grid">
+
+      <div class="review-card reveal">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-quote" lang-hu>Csodálatos ételek, nagyszerű kiszolgálás. Ettem egy burgert és limonádét, és biztosan visszajövök!</p>
+        <p class="review-quote" lang-en>Amazing food, great service. I had a burger and lemonade and will definitely come back again!</p>
+        <div class="review-meta">
+          <span>Seba Alkhamis</span>
+          <span class="time" lang-hu>4 hete</span>
+          <span class="time" lang-en>4 weeks ago</span>
+        </div>
+      </div>
+
+      <div class="review-card reveal">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-quote" lang-hu>A feleségemmel elsőként próbáltuk ki a helyet a megnyitás napján. Nagyon kellemes élmény volt. A megkóstolt fogások tökéletesek voltak, kedves kiszolgálást kaptunk. Tetszett, hogy a tiramisu nem csak nagyon finom volt, hanem az asztalnál készült. Az ott töltött idő családias hangulatban telt. Már várjuk a következő alkalmat!</p>
+        <p class="review-quote" lang-en>My wife and I were the first to try the place on opening day. It was a very pleasant experience. The dishes were perfect, and the service was kind. I loved that the tiramisu was made at the table. The time we spent there felt like a family gathering. We're already looking forward to our next visit!</p>
+        <div class="review-meta">
+          <span>József László</span>
+          <span class="time" lang-hu>6 hónapja</span>
+          <span class="time" lang-en>6 months ago</span>
+        </div>
+        <div class="owner-reply">
+          <b lang-hu>Vértes Bisztró válasza:</b><b lang-en>Reply from Vértes Bisztró:</b>
+          <p lang-hu>Kedves László! Nagyon örülünk, hogy ilyen élményed volt, köszönjük, hogy benéztetek! Várunk vissza szeretettel!</p>
+          <p lang-en>Dear László! We're so happy you had such a great experience as our very first guests — thank you for visiting us!</p>
+        </div>
+      </div>
+
+      <div class="review-card reveal">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-quote" lang-hu>Ebédre érkeztünk, és csupa finomsággal találkoztunk. A sertésrillette pirított kenyérrel remek, a palócleves ízletes és laktató, a csirkemell belül omlós, kívül ropogós. Mindezt teljesen barátságos árakon. Gratulálunk a séfnek!</p>
+        <p class="review-quote" lang-en>We arrived for lunch and were met with nothing but delicious food. The pork rillette with toasted bread is brilliant, the palóc soup hearty, the chicken breast tender inside with a crisp crust. All at friendly prices. Congratulations to the chef!</p>
+        <div class="review-meta">
+          <span>Miklós Szurap</span>
+          <span class="time" lang-hu>5 hónapja</span>
+          <span class="time" lang-en>5 months ago</span>
+        </div>
+      </div>
+
+      <div class="review-card reveal">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-quote" lang-hu>A partneremmel egy sportesemény után nagyon éhesen érkeztünk. Bár több asztalnál ültek vendégek, a rendelés gyorsan ment, és hamar megérkeztek a finom fogások. Mennyei ízek, bőséges adagok. Mindenkinek ajánlom, akinek úgy hozza az útja!</p>
+        <p class="review-quote" lang-en>My partner and I arrived very hungry after a sporting event. Even though tables were occupied, the order was quick and dishes arrived fast. Heavenly flavours, generous portions. I recommend it to anyone passing through!</p>
+        <div class="review-meta">
+          <span>Péter Soós</span>
+          <span class="time" lang-hu>6 hónapja</span>
+          <span class="time" lang-en>6 months ago</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ===================== VISIT / MAP ===================== -->
+<div class="visit-bg" id="latogatas">
+  <div class="section-wrap">
+    <div class="section-head reveal">
+      <span class="kicker" lang-hu>Gyere el hozzánk</span>
+      <span class="kicker" lang-en>Come visit us</span>
+      <h2 lang-hu>Hol vagyunk &amp; nyitvatartás</h2>
+      <h2 lang-en>Where we are &amp; opening hours</h2>
+      <p lang-hu>Csákberény szívében, a Vértes-hegység lábánál</p>
+      <p lang-en>In the heart of Csákberény, at the foot of the Vértes hills</p>
+    </div>
+
+    <div class="visit-grid reveal">
+      <div class="visit-card">
+        <h3 lang-hu>Elérhetőség</h3>
+        <h3 lang-en>Contact</h3>
+
+        <div class="visit-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-5.5-7-11a7 7 0 1 1 14 0c0 5.5-7 11-7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg>
+          <div>
+            <div class="label" lang-hu>Cím</div>
+            <div class="label" lang-en>Address</div>
+            <div class="value">Kossuth utca 20, 8073 Csákberény</div>
+          </div>
+        </div>
+
+        <div class="visit-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 5.19 12.9 19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92Z"/></svg>
+          <div>
+            <div class="label" lang-hu>Telefon</div>
+            <div class="label" lang-en>Phone</div>
+            <div class="value"><a href="tel:+36704264357">06 70 426 4357</a></div>
+          </div>
+        </div>
+
+        <div class="visit-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          <div>
+            <div class="label" lang-hu>Közösségi média</div>
+            <div class="label" lang-en>Social media</div>
+            <div class="value"><a href="https://www.facebook.com/vertesbisztro/" target="_blank">facebook.com/vertesbisztro</a></div>
+          </div>
+        </div>
+
+        <h3 style="margin-top:28px; margin-bottom: 14px;" lang-hu>Nyitvatartás</h3>
+        <h3 style="margin-top:28px; margin-bottom: 14px;" lang-en>Opening Hours</h3>
+        <table class="hours-table">
+          <tr>
+            <td lang-hu>Hétfő</td><td lang-en>Monday</td>
+            <td lang-hu>Zárva</td><td lang-en>Closed</td>
+          </tr>
+          <tr>
+            <td lang-hu>Kedd – Csütörtök</td><td lang-en>Tuesday – Thursday</td>
+            <td>10:00 – 21:00</td>
+          </tr>
+          <tr>
+            <td lang-hu>Péntek</td><td lang-en>Friday</td>
+            <td>10:00 – 22:00</td>
+          </tr>
+          <tr>
+            <td lang-hu>Szombat</td><td lang-en>Saturday</td>
+            <td>10:00 – 22:00</td>
+          </tr>
+          <tr>
+            <td lang-hu>Vasárnap</td><td lang-en>Sunday</td>
+            <td>10:00 – 21:00</td>
+          </tr>
+        </table>
+        <p style="font-size:0.78rem; opacity:0.45; margin-top:10px;" lang-hu>* Ünnepnapokon érdemes telefonon érdeklődni.</p>
+        <p style="font-size:0.78rem; opacity:0.45; margin-top:10px;" lang-en>* Please call ahead on public holidays.</p>
+
+        <div style="margin-top:28px;">
+          <a class="btn btn-primary" href="https://www.google.com/maps/dir/?api=1&destination=Vertes+Bisztro,+Kossuth+utca+20,+8073+Csakbereny,+Hungary" target="_blank" lang-hu>Útvonalterv indítása</a>
+          <a class="btn btn-primary" href="https://www.google.com/maps/dir/?api=1&destination=Vertes+Bisztro,+Kossuth+utca+20,+8073+Csakbereny,+Hungary" target="_blank" lang-en>Get directions</a>
+        </div>
+      </div>
+
+      <div class="map-card">
+        <iframe
+          src="https://www.google.com/maps?q=Kossuth+utca+20,+8073+Csákberény,+Hungary&output=embed"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          allowfullscreen>
+        </iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== FOOTER ===================== -->
+<footer>
+  <img src="images/logo.jpg" alt="Vértes Bisztró" class="footer-logo" onerror="this.style.display='none'">
+  <div class="footer-links">
+    <a href="#etlap" lang-hu>Étlap</a><a href="#etlap" lang-en>Menu</a>
+    <a href="#velemenyek" lang-hu>Vélemények</a><a href="#velemenyek" lang-en>Reviews</a>
+    <a href="https://www.facebook.com/vertesbisztro/" target="_blank">Facebook</a>
+    <a href="tel:+36704264357">06 70 426 4357</a>
+  </div>
+  <div class="footer-text" lang-hu>Vértes Bisztró · Kossuth utca 20, 8073 Csákberény · Étel · Ital · Bár</div>
+  <div class="footer-text" lang-en>Vértes Bisztró · Kossuth utca 20, 8073 Csákberény · Food · Drinks · Bar</div>
+</footer>
+
+<!-- ===================== BACK TO TOP ===================== -->
+<button class="back-to-top" id="backToTop" aria-label="Vissza a tetejére">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+
+<div class="mobile-action-bar" aria-label="Gyors műveletek">
+  <button class="mobile-action-toggle" id="mobileActionToggle" type="button" aria-label="Gyors műveletek megnyitása" aria-expanded="false" aria-controls="mobileActionWindow">
+    <span>
+      <strong lang-hu>Hívás és útvonal</strong><strong lang-en>Call and directions</strong>
+      <small lang-hu>Telefon, térkép egy ablakban</small><small lang-en>Phone and map in one window</small>
+    </span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+  </button>
+</div>
+
+<button class="mobile-action-overlay" id="mobileActionOverlay" type="button" aria-label="Gyors műveletek bezárása"></button>
+
+<div class="mobile-action-window" id="mobileActionWindow" role="dialog" aria-modal="true" aria-labelledby="mobileActionTitle">
+  <div class="mobile-action-window-head">
+    <div>
+      <strong id="mobileActionTitle" lang-hu>Kapcsolat</strong><strong lang-en>Contact</strong>
+      <span lang-hu>Válassz műveletet a bisztróhoz.</span><span lang-en>Choose how to reach the bistro.</span>
+    </div>
+    <button class="mobile-action-close" id="mobileActionClose" type="button" aria-label="Bezárás">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+  </div>
+  <a class="mobile-action call" href="tel:+36704264357">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 5.19 12.9 19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92Z"/></svg>
+    <span lang-hu>Hívás</span><span lang-en>Call</span>
+  </a>
+  <a class="mobile-action route" href="https://www.google.com/maps/dir/?api=1&destination=Vertes+Bisztro,+Kossuth+utca+20,+8073+Csakbereny,+Hungary" target="_blank" rel="noopener">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-5.5-7-11a7 7 0 1 1 14 0c0 5.5-7 11-7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg>
+    <span lang-hu>Útvonal</span><span lang-en>Directions</span>
+  </a>
+</div>
+
+<script>
+(function () {
+  const root = document.documentElement;
+  const topbar = document.getElementById('topbar');
+  const langSeal = document.querySelector('.lang-seal');
+  const langButtons = document.querySelectorAll('.lang-seal button');
+  const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+  const mobilePanel = document.getElementById('mobilePanel');
+  const mobileActionToggle = document.getElementById('mobileActionToggle');
+  const mobileActionWindow = document.getElementById('mobileActionWindow');
+  const mobileActionOverlay = document.getElementById('mobileActionOverlay');
+  const mobileActionClose = document.getElementById('mobileActionClose');
+
+  function closeActionWindow() {
+    root.classList.remove('action-window-open');
+    if (mobileActionToggle) {
+      mobileActionToggle.setAttribute('aria-expanded', 'false');
+      mobileActionToggle.setAttribute('aria-label', root.lang === 'en' ? 'Open quick actions' : 'Gyors műveletek megnyitása');
+    }
+  }
+
+  function openActionWindow() {
+    closeMobileNav();
+    root.classList.add('action-window-open');
+    if (mobileActionToggle) {
+      mobileActionToggle.setAttribute('aria-expanded', 'true');
+      mobileActionToggle.setAttribute('aria-label', root.lang === 'en' ? 'Close quick actions' : 'Gyors műveletek bezárása');
+    }
+  }
+
+  function closeMobileNav() {
+    root.classList.remove('nav-open');
+    if (mobileMenuToggle) {
+      mobileMenuToggle.setAttribute('aria-expanded', 'false');
+      mobileMenuToggle.setAttribute('aria-label', root.lang === 'en' ? 'Open menu' : 'Menü megnyitása');
+    }
+  }
+
+  function toggleMobileNav() {
+    const nextState = !root.classList.contains('nav-open');
+    closeActionWindow();
+    root.classList.toggle('nav-open', nextState);
+    mobileMenuToggle.setAttribute('aria-expanded', String(nextState));
+    mobileMenuToggle.setAttribute('aria-label', nextState
+      ? (root.lang === 'en' ? 'Close menu' : 'Menü bezárása')
+      : (root.lang === 'en' ? 'Open menu' : 'Menü megnyitása'));
+  }
+
+  // Language toggle
+  function setLang(lang) {
+    root.classList.toggle('lang-en', lang === 'en');
+    root.lang = lang;
+    langSeal.classList.toggle('is-en', lang === 'en');
+    langButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.lang === lang));
+    closeMobileNav();
+    closeActionWindow();
+    try { localStorage.setItem('vertes-lang', lang); } catch(e) {}
+  }
+  langButtons.forEach(btn => btn.addEventListener('click', () => setLang(btn.dataset.lang)));
+  try { const s = localStorage.getItem('vertes-lang'); if (s === 'en') setLang('en'); } catch(e) {}
+
+  if (mobileMenuToggle && mobilePanel) {
+    mobileMenuToggle.addEventListener('click', toggleMobileNav);
+    mobilePanel.querySelectorAll('a').forEach(link => link.addEventListener('click', closeMobileNav));
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        closeMobileNav();
+        closeActionWindow();
+      }
+    });
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 960) {
+        closeMobileNav();
+        closeActionWindow();
+      }
+    }, { passive: true });
+  }
+
+  if (mobileActionToggle && mobileActionWindow) {
+    mobileActionToggle.addEventListener('click', () => {
+      if (root.classList.contains('action-window-open')) {
+        closeActionWindow();
+      } else {
+        openActionWindow();
+      }
+    });
+    mobileActionOverlay?.addEventListener('click', closeActionWindow);
+    mobileActionClose?.addEventListener('click', closeActionWindow);
+    mobileActionWindow.querySelectorAll('a').forEach(link => link.addEventListener('click', closeActionWindow));
+  }
+
+  // Topbar scroll
+  const onScroll = () => {
+    topbar.classList.toggle('scrolled', window.scrollY > 60);
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  // Scroll reveal
+  const revealEls = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window && revealEls.length) {
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('is-visible'); obs.unobserve(e.target); }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    revealEls.forEach(el => obs.observe(el));
+  } else {
+    revealEls.forEach(el => el.classList.add('is-visible'));
+  }
+
+  // Back to top
+  const btt = document.getElementById('backToTop');
+  window.addEventListener('scroll', () => btt.classList.toggle('visible', window.scrollY > 600), { passive: true });
+  btt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+})();
+</script>
+</body>
+</html>
